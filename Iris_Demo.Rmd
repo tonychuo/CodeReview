@@ -1,0 +1,30 @@
+---
+title: "Code Review iris"
+output: html_document
+date: "`r Sys.Date()`"
+---
+
+```{r}
+pacman::p_load(dplyr,ggplot2)
+```
+
+```{r}
+glimpse(iris)
+```
+## Simple Regression
+
+```{r message=F}
+ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width)) +
+  geom_point() +
+  geom_smooth(method="lm",se=F)
+```
+
+### Regression by Species
+```{r message=F}
+ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
+  geom_point() +
+  geom_smooth(method="lm",se=F)
+```
+
+
+
