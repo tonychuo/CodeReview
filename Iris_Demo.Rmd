@@ -4,27 +4,64 @@ output: html_document
 date: "`r Sys.Date()`"
 ---
 
+## Project Description
+In this notebook we use the `iris` build-in data set to demonstrate how `missing variables` may incur incorrect regression coefficients via endogenality. 
+
 ```{r}
-pacman::p_load(dplyr,ggplot2)
+# load the required packages
+pacman::p_load(dplyr,ggplot2)  
 ```
 
 ```{r}
+# take a quick look at the the data
 glimpse(iris)
 ```
+
+
 ## Simple Regression
-
+Examine the relationship between `Sepal.Length` and `Sepal.Width` with a simple regression : `Sepal.Width ~ Sepal.Length`.
 ```{r message=F}
-ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width)) +
-  geom_point() +
-  geom_smooth(method="lm",se=F)
+ggplot(iris,  # the data set       
+       aes(   # map variable to plot element attributes 
+         x = Sepal.Length,  # Sepal.Length maps to x-coordination
+         y = Sepal.Width    # Sepal.Width maps to y-coordination
+         ) ) +
+  geom_point() +  # draw a point for every data points 
+  geom_smooth(    # add a regression line 
+    method="lm",      # with the `lm` method
+    se=FALSE          # suppress the confidence interval
+    )
 ```
+NOTE: The regression regression line indicates that `Sepal.Length` are slightly __negative__ correlated to `Sepal.Width`.     
 
-### Regression by Species
+
+
+## Regression by Species
+Examine the relationship between `Sepal.Length` and `Sepal.Width` by `Species` : `Sepal.Width ~ Sepal.Length + color`.
 ```{r message=F}
-ggplot(iris, aes(x=Sepal.Length, y=Sepal.Width, color=Species)) +
-  geom_point() +
-  geom_smooth(method="lm",se=F)
+ggplot(iris,  # the data set       
+       aes(   # map variable to plot element attributes 
+         x = Sepal.Length,  # Sepal.Length maps to x-coordination
+         y = Sepal.Width,   # Sepal.Width maps to y-coordination
+         col = Species      # Species maps to color 
+         ) ) +
+  geom_point() +  # draw a point for every data points 
+  geom_smooth(    # add a regression line 
+    method="lm",      # with the `lm` method
+    se=FALSE          # suppress the confidence interval
+    )
 ```
+NOTE: After adding `Species` into the model, we can observer that, within each `Species`, `Sepal.Length` are __positively__ correlated with `Sepal.Width`.
 
+
+
+## Conclusion
+Comparing the two model and the associated diagrams above, we can conclude that ...  
+
++ In regression models, missing important variable(s) may incur incorrect regression coefficients.
+
++ In this case, the `Species` variable is associated both `Sepal.Width` and `Sepal.Length`.  If the model does not include `Species`, its effect on `Sepal.Width` is accounted to `Sepal.Length` in the OLS estimator, resulting in incorrect regrssion coefficients. 
+
++ `ggplot2` is a very handy package that help to visualize linear regression models. As demonstrated in this R notebook, a complicated concepts such as `endogenality by missing variable` can be illustrated simply by add a line of code `col =  Species`.   
 
 
